@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['tucker@altiscale.com']
   spec.description   = %q(Simple tool to resize AWS instances with EBS root.)
   spec.summary       = IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-  spec.homepage      = 'https://github.com/tucker-altiscale/resize-aws-instance'
+  spec.homepage      = 'https://github.com/Altiscale/resize-aws-instance'
   spec.license       = 'Apache 2.0'
 
   spec.files         = `git ls-files`.split($RS)
