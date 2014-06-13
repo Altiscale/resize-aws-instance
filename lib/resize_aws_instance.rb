@@ -31,8 +31,8 @@ class ResizeAwsInstance
   private
 
   def stop
+    @instance.stop
     loop do
-      @instance.stop
       return true if @instance.status == :stopped
       puts "[#{Time.now}] Waiting for instance to stop..."
       sleep 5
@@ -89,8 +89,8 @@ class ResizeAwsInstance
   end
 
   def start
+    @instance.start
     loop do
-      @instance.start
       return true if @instance.status == :running
       puts "[#{Time.now}] Waiting for instance to start..."
       sleep 5
