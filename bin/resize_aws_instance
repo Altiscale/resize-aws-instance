@@ -6,44 +6,65 @@ require 'trollop'
 opts = Trollop.options do
   version ResizeAwsInstance::VERSION
   banner <<-EOS
-  Simple script to resize EBS based AWS instance.
+Simple script to resize EBS based AWS instance.
 
-  Usage:
-    resize_aws_instance [options]
+ Usage:
+   resize_aws_instance [options]
+
+ Note:
+   The following AWS config options may be provided via environment variables:
+     key-id     => AWS_ACCESS_KEY_ID
+     secret-key => AWS_SECRET_ACCESS_KEY
+     region     => AWS_DEFAULT_REGION
+
+ Options:
   EOS
 
   opt :instance_id,
-      'Instance ID of AWS instance',
+      'AWS instance ID',
       type: :string,
       required: true
   opt :key_id,
       'AWS access key ID',
-      default: ENV['AWS_ACCESS_KEY_ID'],
       type: :string
   opt :secret_key,
       'AWS secret access key',
-      default: ENV['AWS_SECRET_ACCESS_KEY'],
       type: :string
   opt :region,
       'AWS region',
-      default: ENV['AWS_DEFAULT_REGION'],
       type: :string
   opt :type,
       'Target instance type',
       type: :string,
       required: true
+  opt :snapshot,
+      'Snapshot EBS volumes [none, root or comma separated list IDs (a,b,c)]',
+      type: :string,
+      default: 'none'
 end
-Trollop.die :key_id, 'unset' if opts[:key_id].nil?
-Trollop.die :secret_key, 'unset' if opts[:secret_key].nil?
-Trollop.die :region, 'unset' if opts[:region].nil?
+
+opts[:key_id] ||= ENV['AWS_ACCESS_KEY_ID']
+opts[:secret_key] ||= ENV['AWS_SECRET_ACCESS_KEY']
+opts[:region] ||= ENV['AWS_DEFAULT_REGION']
+
+if opts[:key_id].nil?
+  Trollop.die :key_id, 'must be provided or set via AWS_ACCESS_KEY_ID'
+end
+if opts[:secret_key].nil?
+  Trollop.die :secret_key, 'must be provided or set via AWS_SECRET_ACCESS_KEY'
+end
+if opts[:region].nil?
+  Trollop.die :region, 'must be provided or set via AWS_DEFAULT_REGION'
+end
 
 begin
   instance = ResizeAwsInstance.new(
     opts[:key_id],
     opts[:secret_key],
-    opts[:region], opts[:instance_id]
+    opts[:region],
+    opts[:instance_id]
   )
-  instance.resize(opts[:type])
+  instance.resize(opts[:type], opts[:snapshot].split(','))
   puts "[#{Time.now}] Resize complete."
 rescue => e
   puts "[#{Time.now}] #{e}"

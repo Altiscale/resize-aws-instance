@@ -18,15 +18,25 @@ come with a shared library.  To install, simply run the following command:
 
     Simple script to resize EBS based AWS instance.
 
-    Usage:
-      resize_aws_instance [options]
-    --instance-id, -i <s>:   Instance ID of AWS instance
-         --key-id, -k <s>:   AWS access key ID
-     --secret-key, -s <s>:   AWS secret access key
-         --region, -r <s>:   AWS region
-           --type, -t <s>:   Target instance type
-            --version, -v:   Print version and exit
-               --help, -h:   Show this message
+     Usage:
+       resize_aws_instance [options]
+
+     Note:
+       The following AWS config options may be provided via environment variables:
+         key-id     => AWS_ACCESS_KEY_ID
+         secret-key => AWS_SECRET_ACCESS_KEY
+         region     => AWS_DEFAULT_REGION
+
+     Options:
+      --instance-id, -i <s>:   AWS instance ID
+           --key-id, -k <s>:   AWS access key ID
+       --secret-key, -s <s>:   AWS secret access key
+           --region, -r <s>:   AWS region
+             --type, -t <s>:   Target instance type
+         --snapshot, -n <s>:   Snapshot EBS volumes [none, root or comma separated
+                               list IDs (a,b,c)] (default: none)
+              --version, -v:   Print version and exit
+                 --help, -h:   Show this message
 
 ## Contributing
 
